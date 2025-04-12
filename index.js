@@ -20,7 +20,7 @@ eventSource.on(event_types.MESSAGE_SENT, async (data) => {
     }
 
     // Get the last few messages for context (e.g., 3 messages)
-    const numMessagesToInclude = 3;
+    const numMessagesToInclude = 5;
     const recentMessages = chatLog.slice(-numMessagesToInclude);
     
     // Format messages using the proper property names: "name" for sender and "mes" for text.
@@ -59,8 +59,17 @@ eventSource.on(event_types.MESSAGE_SENT, async (data) => {
     let userName = (context.user && context.user.name) || chatLog[chatLog.length - 1].name || "User";
 
     // Build the emotion prompt including both names. THIS IS WHERE THE PROMPT IS GENERATED emotionPrompt gets used a lot and will become a variable.
-    const emotionPrompt = `You are the conscience of ${charName}. The interaction between ${userName} (the user) and ${charName} (you) is as follows:\n${formattedMessages}\n Try to feel for ${charName} emotionally react or feel in response to ${userName}'s input? Think emotionally for yourself and come up with some feelings and thoughts, write them down as a response to yourself.`;
-    
+    const emotionPrompt = `
+### Instruction:
+Given the interaction between ${userName} (the user) and ${charName} (the character), reflect on the emotional tone in their conversation.
+Based on the text below:
+
+${formattedMessages}
+
+How might ${charName} be feeling about this interaction? Provide a thoughtful emotional analysis.
+
+### Response:
+`;
     console.log("Local Emotion Plugin: Built emotion prompt:", emotionPrompt);
     console.log("Prompt length (chars):", emotionPrompt.length);
 
